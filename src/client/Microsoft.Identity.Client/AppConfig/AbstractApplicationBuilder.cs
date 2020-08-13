@@ -65,7 +65,7 @@ namespace Microsoft.Identity.Client
             {
                 throw new ArgumentNullException(instanceDiscoveryJson);
             }
-            
+
             try
             {
                 InstanceDiscoveryResponse instanceDiscovery = JsonHelper.DeserializeFromJson<InstanceDiscoveryResponse>(instanceDiscoveryJson);
@@ -440,8 +440,10 @@ namespace Microsoft.Identity.Client
 
             CreateAuthorityInfoFromEnums();
 
-            //Adfs does not require client id to be in the form of a Guid
-            if (Config.AuthorityInfo?.AuthorityType != AuthorityType.Adfs && !Guid.TryParse(Config.ClientId, out _))
+            //Adfs and OIDC does not require client id to be in the form of a Guid
+            var authroityType = Config.AuthorityInfo?.AuthorityType;
+            if (authroityType != AuthorityType.Adfs
+                && authroityType != AuthorityType.OIDC && !Guid.TryParse(Config.ClientId, out _))
             {
                 throw new MsalClientException(MsalError.ClientIdMustBeAGuid, MsalErrorMessage.ClientIdMustBeAGuid);
             }
@@ -449,7 +451,7 @@ namespace Microsoft.Identity.Client
             if (Config.CustomInstanceDiscoveryMetadata != null && Config.CustomInstanceDiscoveryMetadataUri != null)
             {
                 throw new MsalClientException(
-                    MsalError.CustomMetadataInstanceOrUri, 
+                    MsalError.CustomMetadataInstanceOrUri,
                     MsalErrorMessage.CustomMetadataInstanceOrUri);
             }
 
@@ -737,6 +739,18 @@ namespace Microsoft.Identity.Client
         public T WithAdfsAuthority(string authorityUri, bool validateAuthority = true)
         {
             Config.AuthorityInfo = AuthorityInfo.FromAdfsAuthority(authorityUri, validateAuthority);
+            return (T)this;
+        }
+
+        /// <summary>
+        /// Adds a known Authority corresponding to a standard OIDC server
+        /// </summary>
+        /// <param name="authorizationUri">auth url</param>
+        /// <param name="tokenUri">token url.</param>
+        /// <returns>The builder to chain the .With methods</returns>
+        public T WithOIDCAuthority(string authorizationUri, string tokenUri)
+        {
+            Config.AuthorityInfo = AuthorityInfo.FromOIDCAuthority(authorizationUri, tokenUri);
             return (T)this;
         }
 

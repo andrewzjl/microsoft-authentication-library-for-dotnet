@@ -12,6 +12,8 @@ namespace Microsoft.Identity.Client.TelemetryCore.Internal.Events
     internal class ApiEvent : EventBase
     {
         public const string AuthorityKey = EventNamePrefix + "authority";
+        public const string AuthorizationKey = EventNamePrefix + "authorization";
+        public const string TokenKey = EventNamePrefix + "token";
         public const string AuthorityTypeKey = EventNamePrefix + "authority_type";
         public const string PromptKey = EventNamePrefix + "ui_behavior";
         public const string TenantIdKey = EventNamePrefix + "tenant_id";
@@ -64,19 +66,19 @@ namespace Microsoft.Identity.Client.TelemetryCore.Internal.Events
 
         public ApiTelemetryId ApiTelemId
         {
-            set => this[MsalTelemetryBlobEventNames.ApiTelemIdConstStrKey] = ((int) value).ToString(CultureInfo.InvariantCulture);
+            set => this[MsalTelemetryBlobEventNames.ApiTelemIdConstStrKey] = ((int)value).ToString(CultureInfo.InvariantCulture);
         }
 
         public ApiIds ApiId
         {
             get => (ApiIds)Enum.Parse(typeof(ApiIds), this[MsalTelemetryBlobEventNames.ApiIdConstStrKey]);
-            set => this[MsalTelemetryBlobEventNames.ApiIdConstStrKey] = ((int) value).ToString(CultureInfo.InvariantCulture);
+            set => this[MsalTelemetryBlobEventNames.ApiIdConstStrKey] = ((int)value).ToString(CultureInfo.InvariantCulture);
         }
 
         public string ApiIdString
         {
-            get => this.ContainsKey(MsalTelemetryBlobEventNames.ApiIdConstStrKey) ? 
-                this[MsalTelemetryBlobEventNames.ApiIdConstStrKey] : 
+            get => this.ContainsKey(MsalTelemetryBlobEventNames.ApiIdConstStrKey) ?
+                this[MsalTelemetryBlobEventNames.ApiIdConstStrKey] :
                 null;
         }
 
@@ -85,6 +87,14 @@ namespace Microsoft.Identity.Client.TelemetryCore.Internal.Events
             set => this[AuthorityKey] = ScrubTenant(value)?.ToLowerInvariant();
         }
 
+        public string AuthorizationUri
+        {
+            set => this[AuthorizationKey] = value;
+        }
+        public string TokenUri
+        {
+            set => this[TokenKey] = value;
+        }
         public string AuthorityType
         {
             set => this[AuthorityTypeKey] = value?.ToLowerInvariant();
@@ -131,9 +141,11 @@ namespace Microsoft.Identity.Client.TelemetryCore.Internal.Events
         {
 #pragma warning disable CA1305 // Specify IFormatProvider
             get
-            {  return this.ContainsKey(IsAccessTokenCacheHitKey) ?
-                    (this[IsAccessTokenCacheHitKey] == true.ToString().ToLowerInvariant()) : 
-                    false; }
+            {
+                return this.ContainsKey(IsAccessTokenCacheHitKey) ?
+                     (this[IsAccessTokenCacheHitKey] == true.ToString().ToLowerInvariant()) :
+                     false;
+            }
             set { this[IsAccessTokenCacheHitKey] = value.ToString().ToLowerInvariant(); }
 #pragma warning restore CA1305 // Specify IFormatProvider
         }

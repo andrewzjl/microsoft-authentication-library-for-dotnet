@@ -94,7 +94,7 @@ namespace Microsoft.Identity.Client.Platforms.Shared.Desktop.OsBrowser
                     MsalError.LoopbackRedirectUri,
                     string.Format(CultureInfo.InvariantCulture,
                         "Only loopback redirect uri is supported, but {0} was found. " +
-                        "Configure http://localhost or http://localhost:port both during app registration and when you create the PublicClientApplication object. " +
+                        "Configure http://127.0.0.1 or http://localhost:port both during app registration and when you create the PublicClientApplication object. " +
                         "See https://aka.ms/msal-net-os-browser for details", redirectUri.AbsoluteUri));
             }
 
@@ -124,7 +124,7 @@ namespace Microsoft.Identity.Client.Platforms.Shared.Desktop.OsBrowser
             {
                 listner.Start();
                 int port = ((IPEndPoint)listner.LocalEndpoint).Port;
-                return new Uri("http://localhost:" + port);
+                return new Uri($"http://{IPAddress.Loopback}:{port}/");
             }
             finally
             {

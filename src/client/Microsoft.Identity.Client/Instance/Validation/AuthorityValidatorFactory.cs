@@ -13,6 +13,7 @@ namespace Microsoft.Identity.Client.Instance.Validation
             switch (authorityInfo.AuthorityType)
             {
                 case AuthorityType.Adfs:
+                case AuthorityType.OIDC:
                     return new AdfsAuthorityValidator(serviceBundle);
                 case AuthorityType.Aad:
                     return new AadAuthorityValidator(serviceBundle);

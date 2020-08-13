@@ -33,24 +33,30 @@ namespace Microsoft.Identity.Client.Instance
             string userPrincipalName,
             RequestContext requestContext)
         {
-            if (TryGetCacheValue(authorityInfo, userPrincipalName, out var endpoints))
+            AuthorityEndpoints endpoints;
+            if (authorityInfo.AuthorityType != AuthorityType.OIDC)
             {
-                requestContext.Logger.Info(LogMessages.ResolvingAuthorityEndpointsTrue);
-                return endpoints;
+                if (TryGetCacheValue(authorityInfo, userPrincipalName, out endpoints))
+                {
+                    requestContext.Logger.Info(LogMessages.ResolvingAuthorityEndpointsTrue);
+                    return endpoints;
+                }
+                requestContext.Logger.Info(LogMessages.ResolvingAuthorityEndpointsFalse);
+
+                var validator = AuthorityValidatorFactory.Create(authorityInfo, _serviceBundle);
+
+                // TODO: move this away from here?
+                await validator.ValidateAuthorityAsync(authorityInfo, requestContext).ConfigureAwait(false);
             }
-
-            requestContext.Logger.Info(LogMessages.ResolvingAuthorityEndpointsFalse);
-
-            var validator = AuthorityValidatorFactory.Create(authorityInfo, _serviceBundle);
-
-            // TODO: move this away from here?
-            await validator.ValidateAuthorityAsync(authorityInfo, requestContext).ConfigureAwait(false);
 
             //TODO: stop using AuthorityInfo on its own
             var authority = Authority.CreateAuthority(authorityInfo);
 
             endpoints = authority.GetHardcodedEndpoints();
-            Add(authorityInfo, userPrincipalName, endpoints);
+            if (authorityInfo.AuthorityType != AuthorityType.OIDC)
+            {
+                Add(authorityInfo, userPrincipalName, endpoints);
+            }
             return endpoints;
         }
 

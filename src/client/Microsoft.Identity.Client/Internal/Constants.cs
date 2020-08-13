@@ -15,7 +15,7 @@ namespace Microsoft.Identity.Client.Internal
         public const string UapWEBRedirectUri = "https://sso"; // for WEB
         public const string DefaultRedirectUri = "urn:ietf:wg:oauth:2.0:oob";
         public const string NativeClientRedirectUri = "https://login.microsoftonline.com/common/oauth2/nativeclient";
-        public const string LocalHostRedirectUri = "http://localhost";
+        public const string LocalHostRedirectUri = "http://127.0.0.1";
         public const string DefaultConfidentialClientRedirectUri = "https://replyUrlNotSet";
 
         public const string DefaultRealm = "http://schemas.microsoft.com/rel/trusted-realm";

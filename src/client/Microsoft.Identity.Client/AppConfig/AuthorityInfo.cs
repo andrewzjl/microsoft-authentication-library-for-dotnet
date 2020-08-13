@@ -94,6 +94,8 @@ namespace Microsoft.Identity.Client
                 other.UserRealmUriPrefix,
                 other.ValidateAuthority)
         {
+            AuthorizationUri = other.AuthorizationUri;
+            TokenUri = other.TokenUri;
         }
 
         public string Host { get; }
@@ -189,6 +191,10 @@ namespace Microsoft.Identity.Client
             return new AuthorityInfo(AuthorityType.Adfs, authorityUri, validateAuthority);
         }
 
+        internal static AuthorityInfo FromOIDCAuthority(string authorizationUri, string tokenUri)
+        {
+            return new AuthorityInfo(authorizationUri, tokenUri);
+        }
         internal static AuthorityInfo FromB2CAuthority(string authorityUri)
         {
             return new AuthorityInfo(AuthorityType.B2C, authorityUri, false);

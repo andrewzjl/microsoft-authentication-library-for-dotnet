@@ -24,7 +24,7 @@ namespace Microsoft.Identity.Client.Internal.Requests
             IServiceBundle serviceBundle,
             ITokenCacheInternal tokenCache,
             AcquireTokenCommonParameters commonParameters,
-            RequestContext requestContext, 
+            RequestContext requestContext,
             string homeAccountId = null)
         {
             _serviceBundle = serviceBundle;
@@ -89,7 +89,7 @@ namespace Microsoft.Identity.Client.Internal.Requests
         public string OriginalRedirectUriString => _serviceBundle.Config.RedirectUri;
         public IDictionary<string, string> ExtraQueryParameters { get; }
 
-        public string ClaimsAndClientCapabilities { get; private set; }    
+        public string ClaimsAndClientCapabilities { get; private set; }
 
         /// <summary>
         /// Indicates if the user configured claims via .WithClaims. Not affected by Client Capabilities
@@ -118,7 +118,7 @@ namespace Microsoft.Identity.Client.Internal.Requests
 #endif
         // TODO: ideally, this can come from the particular request instance and not be in RequestBase since it's not valid for all requests.
         public bool SendX5C { get; set; }
-        
+
         public string LoginHint
         {
             get
@@ -135,7 +135,7 @@ namespace Microsoft.Identity.Client.Internal.Requests
         }
         public IAccount Account { get; set; }
 
-        public string HomeAccountId { get;}
+        public string HomeAccountId { get; }
 
 
         public bool IsClientCredentialRequest => ApiId == ApiEvent.ApiIds.AcquireTokenForClient;
@@ -152,7 +152,7 @@ namespace Microsoft.Identity.Client.Internal.Requests
         }
         public UserAssertion UserAssertion { get; set; }
 
-#endregion
+        #endregion
 
         public void LogParameters()
         {
@@ -168,6 +168,8 @@ namespace Microsoft.Identity.Client.Internal.Requests
             builder.AppendLine("Extra Query Params Keys (space separated) - " + ExtraQueryParameters.Keys.AsSingleString());
             builder.AppendLine("ClaimsAndClientCapabilities - " + ClaimsAndClientCapabilities);
             builder.AppendLine("Authority - " + AuthorityInfo?.CanonicalAuthority);
+            builder.AppendLine("AuthorizationUri - " + AuthorityInfo?.AuthorizationUri);
+            builder.AppendLine("TokenUri - " + AuthorityInfo?.TokenUri);
             builder.AppendLine("ApiId - " + ApiId);
             builder.AppendLine("IsConfidentialClient - " + IsConfidentialClient);
             builder.AppendLine("SendX5C - " + SendX5C);

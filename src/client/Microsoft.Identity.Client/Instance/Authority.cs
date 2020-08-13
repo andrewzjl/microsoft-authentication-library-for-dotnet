@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using Microsoft.Identity.Client.Instance.Discovery;
 
 namespace Microsoft.Identity.Client.Instance
 {
@@ -184,7 +185,7 @@ namespace Microsoft.Identity.Client.Instance
         internal static AuthorityType GetAuthorityType(string authority)
         {
             string firstPathSegment = GetFirstPathSegment(authority);
-
+            var isKnownAzureEnvironment = KnownMetadataProvider.IsKnownEnvironment((new Uri(authority)).Host);
             if (string.Equals(firstPathSegment, "adfs", StringComparison.OrdinalIgnoreCase))
             {
                 return AuthorityType.Adfs;
@@ -193,9 +194,13 @@ namespace Microsoft.Identity.Client.Instance
             {
                 return AuthorityType.B2C;
             }
-            else
+            else if (isKnownAzureEnvironment)
             {
                 return AuthorityType.Aad;
+            }
+            else
+            {
+                return AuthorityType.OIDC;
             }
         }
 

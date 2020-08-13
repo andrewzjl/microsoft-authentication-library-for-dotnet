@@ -68,12 +68,12 @@ namespace Microsoft.Identity.Client.Instance.Discovery
             _userMetadataProvider = userMetadataProvider;
             _knownMetadataProvider = knownMetadataProvider ?? new KnownMetadataProvider();
             _networkCacheMetadataProvider = networkCacheMetadataProvider ?? new NetworkCacheMetadataProvider();
-            
-            _networkMetadataProvider = networkMetadataProvider ?? 
+
+            _networkMetadataProvider = networkMetadataProvider ??
                 new NetworkMetadataProvider(
-                    _httpManager, 
-                    _telemetryManager, 
-                    _networkCacheMetadataProvider, 
+                    _httpManager,
+                    _telemetryManager,
+                    _networkCacheMetadataProvider,
                     userProvidedInstanceDiscoveryUri);
 
             if (shouldClearCaches)
@@ -103,6 +103,7 @@ namespace Microsoft.Identity.Client.Instance.Discovery
 
                 case AuthorityType.Adfs:
                 case AuthorityType.B2C:
+                case AuthorityType.OIDC:
 
                     requestContext.Logger.Info("[Instance Discovery] Skipping Instance discovery for non-AAD authority");
                     return await GetMetadataEntryAsync(authority, requestContext).ConfigureAwait(false);
@@ -113,7 +114,7 @@ namespace Microsoft.Identity.Client.Instance.Discovery
         }
 
         public async Task<InstanceDiscoveryMetadataEntry> GetMetadataEntryAsync(
-            string authority, 
+            string authority,
             RequestContext requestContext)
         {
             AuthorityType type = Authority.GetAuthorityType(authority);
@@ -136,21 +137,24 @@ namespace Microsoft.Identity.Client.Instance.Discovery
                     }
 
                     return entry;
-                    
-                    
+
+
                 // ADFS and B2C do not support instance discovery 
                 case AuthorityType.Adfs:
                 case AuthorityType.B2C:
                     requestContext.Logger.Info("[Instance Discovery] Skipping Instance discovery for non-AAD authority");
                     return CreateEntryForSingleAuthority(authorityUri);
 
+                case AuthorityType.OIDC:
+                    requestContext.Logger.Info("[Instance Discovery] Skipping Instance discovery for OIDC authority");
+                    return CreateEntryForSingleAuthority(authorityUri);
                 default:
                     throw new InvalidOperationException("Unexpected authority type " + type);
             }
         }
 
         private async Task<InstanceDiscoveryMetadataEntry> FetchNetworkMetadataOrFallbackAsync(
-            RequestContext requestContext, 
+            RequestContext requestContext,
             Uri authorityUri)
         {
             try

@@ -52,8 +52,9 @@ namespace Microsoft.Identity.Client.Internal.Requests
         {
             string messageWithPii = string.Format(
                 CultureInfo.InvariantCulture,
-                "=== Token Acquisition ({3}) started:\n\tAuthority: {0}\n\tScope: {1}\n\tClientId: {2}\n\t",
+                "=== Token Acquisition ({3}) started:\n\tAuthority: {0} {1} \n\tScope: {2}\n\tClientId: {3}\n\t",
                 authenticationRequestParameters.AuthorityInfo?.CanonicalAuthority,
+                authenticationRequestParameters.AuthorityInfo?.AuthorityType,
                 authenticationRequestParameters.Scope.AsSingleString(),
                 authenticationRequestParameters.ClientId,
                 GetType().Name);
@@ -168,6 +169,8 @@ namespace Microsoft.Identity.Client.Internal.Requests
             if (AuthenticationRequestParameters.AuthorityInfo != null)
             {
                 apiEvent.Authority = new Uri(AuthenticationRequestParameters.AuthorityInfo.CanonicalAuthority);
+                apiEvent.AuthorizationUri = AuthenticationRequestParameters.AuthorityInfo.AuthorizationUri;
+                apiEvent.TokenUri = AuthenticationRequestParameters.AuthorityInfo.TokenUri;
                 apiEvent.AuthorityType = AuthenticationRequestParameters.AuthorityInfo.AuthorityType.ToString();
             }
 
@@ -207,8 +210,8 @@ namespace Microsoft.Identity.Client.Internal.Requests
             var idtItem = tuple.Item2;
 
             return new AuthenticationResult(
-                atItem, 
-                idtItem, 
+                atItem,
+                idtItem,
                 AuthenticationRequestParameters.AuthenticationScheme,
                 AuthenticationRequestParameters.RequestContext.CorrelationId,
                 msalTokenResponse.TokenSource);
