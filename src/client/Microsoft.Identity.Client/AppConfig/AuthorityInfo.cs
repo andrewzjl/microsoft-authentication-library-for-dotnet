@@ -60,7 +60,23 @@ namespace Microsoft.Identity.Client
                     GetFirstPathSegment(authority)), authorityBuilder.Port);
             }
         }
+        public AuthorityInfo(
+            string authorizationUri,
+            string tokenUri)
+        {
+            AuthorityType = AuthorityType.OIDC;
+            ValidateAuthority = false;
 
+            var authorityBuilder = new UriBuilder(authorizationUri);
+            Host = authorityBuilder.Host;
+            CanonicalAuthority = UriBuilderExtensions.GetHttpsUriWithOptionalPort(string.Format(
+                CultureInfo.InvariantCulture,
+                "https://{0}/{1}/",
+                authorityBuilder.Uri.Authority,
+                GetFirstPathSegment(authorizationUri)), authorityBuilder.Port);
+            AuthorizationUri = authorizationUri;
+            TokenUri = tokenUri;
+        }
         private AuthorityInfo(string host, string canonicalAuthority, AuthorityType authorityType, string userRealmUriPrefix, bool validateAuthority)
         {
             Host = host;
@@ -70,7 +86,7 @@ namespace Microsoft.Identity.Client
             ValidateAuthority = validateAuthority;
         }
 
-        public AuthorityInfo(AuthorityInfo other) : 
+        public AuthorityInfo(AuthorityInfo other) :
             this(
                 other.Host,
                 other.CanonicalAuthority,
@@ -86,6 +102,10 @@ namespace Microsoft.Identity.Client
         public string UserRealmUriPrefix { get; }
         public bool ValidateAuthority { get; }
 
+        // the authorization uri for standard OIDC
+        public string AuthorizationUri { get; }
+        // the token uri for standard OIDC
+        public string TokenUri { get; }
         #region Builders
         internal static AuthorityInfo FromAuthorityUri(string authorityUri, bool validateAuthority)
         {
@@ -233,7 +253,7 @@ namespace Microsoft.Identity.Client
             {
                 return string.Equals(
                     CanonicalAuthority,
-                    ClientApplicationBase.DefaultAuthority, 
+                    ClientApplicationBase.DefaultAuthority,
                     StringComparison.OrdinalIgnoreCase);
             }
         }

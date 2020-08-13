@@ -36,17 +36,17 @@ namespace Microsoft.Identity.Client.TelemetryCore.Internal
         {
             switch (accountType)
             {
-            case AccountType.MSA:
-                return "msa";
+                case AccountType.MSA:
+                    return "msa";
 
-            case AccountType.AAD:
-                return "aad";
+                case AccountType.AAD:
+                    return "aad";
 
-            case AccountType.B2C:
-                return "b2c";
+                case AccountType.B2C:
+                    return "b2c";
 
-            default:
-                return "unknown";
+                default:
+                    return "unknown";
             }
         }
 
@@ -54,26 +54,26 @@ namespace Microsoft.Identity.Client.TelemetryCore.Internal
         {
             switch (actionType)
             {
-            case ActionType.Adal:
-                return "adal";
+                case ActionType.Adal:
+                    return "adal";
 
-            case ActionType.CustomInteractive:
-                return "custominteractive";
+                case ActionType.CustomInteractive:
+                    return "custominteractive";
 
-            case ActionType.MsaInteractive:
-                return "msainteractive";
+                case ActionType.MsaInteractive:
+                    return "msainteractive";
 
-            case ActionType.MsaNonInteractive:
-                return "msanoninteractive";
+                case ActionType.MsaNonInteractive:
+                    return "msanoninteractive";
 
-            case ActionType.Wam:
-                return "wam";
+                case ActionType.Wam:
+                    return "wam";
 
-            case ActionType.Msal:
-                return "msal";
+                case ActionType.Msal:
+                    return "msal";
 
-            default:
-                return "unknown";
+                default:
+                    return "unknown";
             }
         }
 
@@ -81,20 +81,20 @@ namespace Microsoft.Identity.Client.TelemetryCore.Internal
         {
             switch (outcome)
             {
-            case AuthOutcome.Cancelled:
-                return "canceled";
+                case AuthOutcome.Cancelled:
+                    return "canceled";
 
-            case AuthOutcome.Failed:
-                return "failed";
+                case AuthOutcome.Failed:
+                    return "failed";
 
-            case AuthOutcome.Incomplete:
-                return "incomplete";
+                case AuthOutcome.Incomplete:
+                    return "incomplete";
 
-            case AuthOutcome.Succeeded:
-                return "succeeded";
+                case AuthOutcome.Succeeded:
+                    return "succeeded";
 
-            default:
-                return "unknown";
+                default:
+                    return "unknown";
             }
         }
 
@@ -102,20 +102,20 @@ namespace Microsoft.Identity.Client.TelemetryCore.Internal
         {
             switch (errorSource)
             {
-            case ErrorSource.AuthSdk:
-                return "authsdk";
+                case ErrorSource.AuthSdk:
+                    return "authsdk";
 
-            case ErrorSource.Client:
-                return "client";
+                case ErrorSource.Client:
+                    return "client";
 
-            case ErrorSource.None:
-                return "none";
+                case ErrorSource.None:
+                    return "none";
 
-            case ErrorSource.Service:
-                return "service";
+                case ErrorSource.Service:
+                    return "service";
 
-            default:
-                return "unknown";
+                default:
+                    return "unknown";
             }
         }
 
@@ -123,17 +123,17 @@ namespace Microsoft.Identity.Client.TelemetryCore.Internal
         {
             switch (eventType)
             {
-            case EventType.Scenario:
-                return "scenario";
+                case EventType.Scenario:
+                    return "scenario";
 
-            case EventType.Action:
-                return "action";
+                case EventType.Action:
+                    return "action";
 
-            case EventType.LibraryError:
-                return "error";
+                case EventType.LibraryError:
+                    return "error";
 
-            default:
-                return "unknown";
+                default:
+                    return "unknown";
             }
         }
 
@@ -141,14 +141,14 @@ namespace Microsoft.Identity.Client.TelemetryCore.Internal
         {
             switch (service)
             {
-            case IdentityService.AAD:
-                return "aad";
+                case IdentityService.AAD:
+                    return "aad";
 
-            case IdentityService.MSA:
-                return "msa";
+                case IdentityService.MSA:
+                    return "msa";
 
-            default:
-                return "unknown";
+                default:
+                    return "unknown";
             }
         }
 
@@ -156,14 +156,14 @@ namespace Microsoft.Identity.Client.TelemetryCore.Internal
         {
             switch (audience)
             {
-            case TelemetryAudienceType.PreProduction:
-                return "preproduction";
+                case TelemetryAudienceType.PreProduction:
+                    return "preproduction";
 
-            case TelemetryAudienceType.Production:
-                return "production";
+                case TelemetryAudienceType.Production:
+                    return "production";
 
-            default:
-                return "unknown";
+                default:
+                    return "unknown";
             }
         }
 
@@ -171,23 +171,23 @@ namespace Microsoft.Identity.Client.TelemetryCore.Internal
         {
             switch (osPlatform)
             {
-            case OsPlatform.Win32:
-                return "win32";
+                case OsPlatform.Win32:
+                    return "win32";
 
-            case OsPlatform.Android:
-                return "android";
+                case OsPlatform.Android:
+                    return "android";
 
-            case OsPlatform.Ios:
-                return "ios";
+                case OsPlatform.Ios:
+                    return "ios";
 
-            case OsPlatform.Mac:
-                return "mac";
+                case OsPlatform.Mac:
+                    return "mac";
 
-            case OsPlatform.Winrt:
-                return "winrt";
+                case OsPlatform.Winrt:
+                    return "winrt";
 
-            default:
-                return "unknown";
+                default:
+                    return "unknown";
             }
         }
 
@@ -200,46 +200,48 @@ namespace Microsoft.Identity.Client.TelemetryCore.Internal
         {
             switch (apiTelemetryFeature)
             {
-            case ApiTelemetryFeature.WithAccount:
-                return ApiTelemetryFeatureKey.WithAccount;
-            case ApiTelemetryFeature.WithRedirectUri:
-                return ApiTelemetryFeatureKey.WithRedirectUri;
-            case ApiTelemetryFeature.WithForceRefresh:
-                 return ApiTelemetryFeatureKey.WithForceRefresh;
-            case ApiTelemetryFeature.WithLoginHint:
-                return ApiTelemetryFeatureKey.WithLoginHint;
-            case ApiTelemetryFeature.WithExtraScopesToConsent:
-                return ApiTelemetryFeatureKey.WithExtraScopesToConsent;
-            case ApiTelemetryFeature.WithUserAssertion:
-                return ApiTelemetryFeatureKey.WithUserAssertion;
-            case ApiTelemetryFeature.WithSendX5C:
-                return ApiTelemetryFeatureKey.WithSendX5C;
-            case ApiTelemetryFeature.WithCurrentSynchronizationContext:
-                return ApiTelemetryFeatureKey.WithCurrentSynchronizationContext;
-            case ApiTelemetryFeature.WithEmbeddedWebView:
-                return ApiTelemetryFeatureKey.WithEmbeddedWebView;
-            case ApiTelemetryFeature.WithParent:
-                return ApiTelemetryFeatureKey.WithParent;
-            case ApiTelemetryFeature.WithPrompt:
-                return ApiTelemetryFeatureKey.WithPrompt;
-            case ApiTelemetryFeature.WithUsername:
-                return ApiTelemetryFeatureKey.WithUsername;
-            case ApiTelemetryFeature.WithClaims:
-                return ApiTelemetryFeatureKey.WithClaims;
-            case ApiTelemetryFeature.WithExtraQueryParameters:
-                return ApiTelemetryFeatureKey.WithExtraQueryParameters;
-            case ApiTelemetryFeature.WithAuthority:
-                return ApiTelemetryFeatureKey.WithAuthority;
-            case ApiTelemetryFeature.WithValidateAuthority:
-                return ApiTelemetryFeatureKey.WithValidateAuthority;
-            case ApiTelemetryFeature.WithAdfsAuthority:
-                return ApiTelemetryFeatureKey.WithAdfsAuthority;
-            case ApiTelemetryFeature.WithB2CAuthority:
-                return ApiTelemetryFeatureKey.WithB2CAuthority;
-            case ApiTelemetryFeature.WithCustomWebUi:
-                return ApiTelemetryFeatureKey.WithCustomWebUi;
-            default:
-                return ApiTelemetryFeatureKey.Unknown;
+                case ApiTelemetryFeature.WithAccount:
+                    return ApiTelemetryFeatureKey.WithAccount;
+                case ApiTelemetryFeature.WithRedirectUri:
+                    return ApiTelemetryFeatureKey.WithRedirectUri;
+                case ApiTelemetryFeature.WithForceRefresh:
+                    return ApiTelemetryFeatureKey.WithForceRefresh;
+                case ApiTelemetryFeature.WithLoginHint:
+                    return ApiTelemetryFeatureKey.WithLoginHint;
+                case ApiTelemetryFeature.WithExtraScopesToConsent:
+                    return ApiTelemetryFeatureKey.WithExtraScopesToConsent;
+                case ApiTelemetryFeature.WithUserAssertion:
+                    return ApiTelemetryFeatureKey.WithUserAssertion;
+                case ApiTelemetryFeature.WithSendX5C:
+                    return ApiTelemetryFeatureKey.WithSendX5C;
+                case ApiTelemetryFeature.WithCurrentSynchronizationContext:
+                    return ApiTelemetryFeatureKey.WithCurrentSynchronizationContext;
+                case ApiTelemetryFeature.WithEmbeddedWebView:
+                    return ApiTelemetryFeatureKey.WithEmbeddedWebView;
+                case ApiTelemetryFeature.WithParent:
+                    return ApiTelemetryFeatureKey.WithParent;
+                case ApiTelemetryFeature.WithPrompt:
+                    return ApiTelemetryFeatureKey.WithPrompt;
+                case ApiTelemetryFeature.WithUsername:
+                    return ApiTelemetryFeatureKey.WithUsername;
+                case ApiTelemetryFeature.WithClaims:
+                    return ApiTelemetryFeatureKey.WithClaims;
+                case ApiTelemetryFeature.WithExtraQueryParameters:
+                    return ApiTelemetryFeatureKey.WithExtraQueryParameters;
+                case ApiTelemetryFeature.WithAuthority:
+                    return ApiTelemetryFeatureKey.WithAuthority;
+                case ApiTelemetryFeature.WithValidateAuthority:
+                    return ApiTelemetryFeatureKey.WithValidateAuthority;
+                case ApiTelemetryFeature.WithAdfsAuthority:
+                    return ApiTelemetryFeatureKey.WithAdfsAuthority;
+                case ApiTelemetryFeature.WithB2CAuthority:
+                    return ApiTelemetryFeatureKey.WithB2CAuthority;
+                case ApiTelemetryFeature.WithOIDCAuthority:
+                    return ApiTelemetryFeatureKey.WithOIDCAuthority;
+                case ApiTelemetryFeature.WithCustomWebUi:
+                    return ApiTelemetryFeatureKey.WithCustomWebUi;
+                default:
+                    return ApiTelemetryFeatureKey.Unknown;
             }
         }
     }

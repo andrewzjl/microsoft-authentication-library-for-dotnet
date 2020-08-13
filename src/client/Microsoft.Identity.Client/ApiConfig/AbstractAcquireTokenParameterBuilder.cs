@@ -288,6 +288,28 @@ namespace Microsoft.Identity.Client
         }
 
         /// <summary>
+        /// Adds a known Authority corresponding to an OIDC server
+        /// </summary>
+        /// <param name="authorizationUri">authorization URL for an OIDC server</param>
+        /// <param name="tokenUri">token URL for an OIDC server</param>
+        /// <returns>The builder to chain the .With methods</returns>
+        public T WithOIDCAuthority(string authorizationUri, string tokenUri)
+        {
+            CommonParameters.AddApiTelemetryFeature(ApiTelemetryFeature.WithOIDCAuthority);
+
+            if (string.IsNullOrWhiteSpace(authorizationUri))
+            {
+                throw new ArgumentNullException(nameof(authorizationUri));
+            }
+            if (string.IsNullOrWhiteSpace(tokenUri))
+            {
+                throw new ArgumentNullException(nameof(tokenUri));
+            }
+            CommonParameters.AuthorityOverride = new AuthorityInfo(authorizationUri, tokenUri);
+            return (T)this;
+        }
+
+        /// <summary>
         /// Adds a known Authority corresponding to an ADFS server. See https://aka.ms/msal-net-adfs
         /// </summary>
         /// <param name="authorityUri">Authority URL for an ADFS server</param>

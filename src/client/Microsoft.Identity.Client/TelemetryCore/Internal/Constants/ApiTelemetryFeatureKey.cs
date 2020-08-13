@@ -26,6 +26,7 @@ namespace Microsoft.Identity.Client.TelemetryCore.Internal.Constants
         public const string WithValidateAuthority = "api_with_validate_authority";
         public const string WithAdfsAuthority = "api_with_adfs_authority";
         public const string WithB2CAuthority = "api_with_b2c_authority";
+        public const string WithOIDCAuthority = "api_with_oidc_authority";
         public const string WithCustomWebUi = "api_with_custom_webui";
     }
 }

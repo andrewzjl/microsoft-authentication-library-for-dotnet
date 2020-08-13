@@ -95,6 +95,8 @@ namespace Microsoft.Identity.Client.Instance
 
                     return CreateAuthorityWithTenant(configAuthorityInfo, requestHomeAccountTenantId);
 
+                case AuthorityType.OIDC:
+                    return CreateAuthority(configAuthorityInfo);
                 default:
                     throw new MsalClientException(
                         MsalError.InvalidAuthorityType,
@@ -134,7 +136,8 @@ namespace Microsoft.Identity.Client.Instance
 
                 case AuthorityType.Aad:
                     return new AadAuthority(authorityInfo);
-
+                case AuthorityType.OIDC:
+                    return new OIDCAuthority(authorityInfo);
                 default:
                     throw new MsalClientException(
                         MsalError.InvalidAuthorityType,
