@@ -37,9 +37,11 @@ namespace Microsoft.Identity.Client.Platforms.Shared.DefaultOSBrowser
             try
             {
                 string urlToListenTo = $"http://{IPAddress.Loopback}:{port}/";
+                string urlToListenToLocalhost = $"http://localhost:{port}/";
 
                 httpListener = new HttpListener();
                 httpListener.Prefixes.Add(urlToListenTo);
+                httpListener.Prefixes.Add(urlToListenToLocalhost);
 
                 TestBeforeStart?.Invoke();
 

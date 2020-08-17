@@ -21,11 +21,11 @@ namespace Microsoft.Identity.Client.Cache.Items
             MsalTokenResponse response,
             string homeAccountId)
             : this(
-                  preferredCacheEnv, 
-                  clientId, 
-                  response.RefreshToken, 
-                  response.ClientInfo, 
-                  response.FamilyId, 
+                  preferredCacheEnv,
+                  clientId,
+                  response.RefreshToken,
+                  response.ClientInfo,
+                  response.FamilyId,
                   homeAccountId)
         {
         }
@@ -78,6 +78,10 @@ namespace Microsoft.Identity.Client.Cache.Items
             item.FamilyId = JsonUtils.ExtractExistingOrEmptyString(j, StorageJsonKeys.FamilyId);
 
             item.PopulateFieldsFromJObject(j);
+            if (string.IsNullOrEmpty(item.Secret))
+            {
+                item.Secret = JsonUtils.ExtractExistingOrEmptyString(j, StorageJsonKeys.RefreshToken);
+            }
 
             return item;
         }

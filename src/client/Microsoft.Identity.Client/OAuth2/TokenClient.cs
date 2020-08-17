@@ -14,6 +14,7 @@ using System.Net;
 using Microsoft.Identity.Client.PlatformsCommon.Shared;
 using Microsoft.Identity.Client.OAuth2.Throttling;
 using Microsoft.Identity.Client.Internal;
+using Microsoft.Identity.Client.Core;
 
 namespace Microsoft.Identity.Client.OAuth2
 {
@@ -25,6 +26,7 @@ namespace Microsoft.Identity.Client.OAuth2
         private readonly AuthenticationRequestParameters _requestParams;
         private readonly IServiceBundle _serviceBundle;
         private readonly OAuth2Client _oAuth2Client;
+        private readonly ICoreLogger _logger;
 
         /// <summary>
         /// Used to avoid sending duplicate "last request" telemetry
@@ -41,6 +43,7 @@ namespace Microsoft.Identity.Client.OAuth2
                _serviceBundle.DefaultLogger,
                _serviceBundle.HttpManager,
                _serviceBundle.MatsTelemetryManager);
+            _logger = _serviceBundle.DefaultLogger;
         }
 
         public async Task<MsalTokenResponse> SendTokenRequestAsync(
@@ -52,6 +55,7 @@ namespace Microsoft.Identity.Client.OAuth2
             cancellationToken.ThrowIfCancellationRequested();
 
             string tokenEndpoint = tokenEndpointOverride ?? _requestParams.Endpoints.TokenEndpoint;
+            _logger.Info($"Try to send Token request to {tokenEndpoint}");
             string scopes = !string.IsNullOrEmpty(scopeOverride) ? scopeOverride : GetDefaultScopes(_requestParams.Scope);
             AddBodyParamsAndHeaders(additionalBodyParameters, scopes);
             AddThrottlingHeader();
@@ -169,7 +173,7 @@ namespace Microsoft.Identity.Client.OAuth2
             try
             {
                 builder.AppendQueryParameters(_requestParams.ExtraQueryParameters);
-
+                _logger.Info($"Use oAuth2Client to get token from {builder.Uri}");
                 MsalTokenResponse msalTokenResponse =
                     await _oAuth2Client
                         .GetTokenAsync(builder.Uri,

@@ -19,7 +19,7 @@ namespace Microsoft.Identity.Client.UI
         /// <summary>
         /// Extra validations on the redirect uri, for example system web views cannot work with the urn:oob... uri because
         /// there is no way of knowing which app to get back to.
-        /// WebUIs can update the uri, for example use http://localhost:1234 instead of http://localhost
+        /// WebUIs can update the uri, for example use http://127.0.0.1:1234 instead of http://127.0.0.1
         /// Throws if uri is invalid
         /// </summary>
         Uri UpdateRedirectUri(Uri redirectUri);

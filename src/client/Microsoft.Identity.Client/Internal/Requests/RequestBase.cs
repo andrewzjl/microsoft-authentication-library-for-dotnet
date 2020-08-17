@@ -189,7 +189,8 @@ namespace Microsoft.Identity.Client.Internal.Requests
 
             if (!AuthenticationRequestParameters.IsClientCredentialRequest &&
                 AuthenticationRequestParameters.ApiId != ApiEvent.ApiIds.AcquireTokenByRefreshToken &&
-                AuthenticationRequestParameters.AuthorityInfo.AuthorityType != AuthorityType.Adfs)
+                AuthenticationRequestParameters.AuthorityInfo.AuthorityType != AuthorityType.Adfs &&
+                AuthenticationRequestParameters.AuthorityInfo.AuthorityType != AuthorityType.OIDC)
             {
                 //client_info is not returned from client credential flows because there is no user present.
                 fromServer = ClientInfo.CreateFromJson(msalTokenResponse.ClientInfo);
@@ -214,7 +215,8 @@ namespace Microsoft.Identity.Client.Internal.Requests
                 idtItem,
                 AuthenticationRequestParameters.AuthenticationScheme,
                 AuthenticationRequestParameters.RequestContext.CorrelationId,
-                msalTokenResponse.TokenSource);
+                msalTokenResponse.TokenSource,
+                msalTokenResponse.RefreshToken);
         }
 
         private void ValidateAccountIdentifiers(ClientInfo fromServer)
@@ -278,6 +280,11 @@ namespace Microsoft.Identity.Client.Internal.Requests
             string scopes = GetOverridenScopes(AuthenticationRequestParameters.Scope).AsSingleString();
             var tokenClient = new TokenClient(AuthenticationRequestParameters);
 
+            AuthenticationRequestParameters.RequestContext.Logger.Info(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "=== start to send token request to endpoint:",
+                    tokenEndpoint));
             return await tokenClient.SendTokenRequestAsync(
                 additionalBodyParameters,
                 scopes,

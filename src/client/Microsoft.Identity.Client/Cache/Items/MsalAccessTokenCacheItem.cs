@@ -72,6 +72,7 @@ namespace Microsoft.Identity.Client.Cache.Items
                 RefreshOnUnixTimestamp = CoreHelpers.DateTimeToUnixTimestamp(accessTokenRefreshOn.Value);
             }
 
+            ExpiresIn = (long)(accessTokenExpiresOn - DateTimeOffset.Now).TotalSeconds;
             HomeAccountId = homeAccountId;
         }
 
@@ -117,7 +118,7 @@ namespace Microsoft.Identity.Client.Cache.Items
                                     string.Format(CultureInfo.InvariantCulture, "https://{0}/{1}/", Environment, TenantId ?? "common");
 
         internal SortedSet<string> ScopeSet => ScopeHelper.ConvertStringToLowercaseSortedSet(NormalizedScopes);
-
+        internal long ExpiresIn { get; set; }
         internal DateTimeOffset ExpiresOn => CoreHelpers.UnixTimestampStringToDateTime(ExpiresOnUnixTimestamp);
         internal DateTimeOffset ExtendedExpiresOn => CoreHelpers.UnixTimestampStringToDateTime(ExtendedExpiresOnUnixTimestamp);
         internal DateTimeOffset? RefreshOn
@@ -169,8 +170,13 @@ namespace Microsoft.Identity.Client.Cache.Items
                 KeyId = JsonUtils.ExtractExistingOrDefault<string>(j, StorageJsonKeys.KeyId),
                 TokenType = JsonUtils.ExtractExistingOrDefault<string>(j, StorageJsonKeys.TokenType) ?? StorageJsonValues.TokenTypeBearer
             };
+            item.ExpiresIn = JsonUtils.ExtractParsedIntOrZero(j, StorageJsonKeys.ExpiresIn);
 
             item.PopulateFieldsFromJObject(j);
+            if (string.IsNullOrEmpty(item.Secret))
+            {
+                item.Secret = JsonUtils.ExtractExistingOrEmptyString(j, StorageJsonKeys.AccessToken);
+            }
 
             return item;
         }

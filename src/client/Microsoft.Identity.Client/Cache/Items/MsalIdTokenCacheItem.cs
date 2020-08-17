@@ -52,7 +52,7 @@ namespace Microsoft.Identity.Client.Cache.Items
             HomeAccountId = homeAccountId;
         }
 
-    
+
         internal bool IsAdfs { get; set; }
         internal string TenantId { get; set; }
 
@@ -90,7 +90,10 @@ namespace Microsoft.Identity.Client.Cache.Items
             };
 
             item.PopulateFieldsFromJObject(j);
-
+            if (string.IsNullOrEmpty(item.Secret))
+            {
+                item.Secret = JsonUtils.ExtractExistingOrEmptyString(j, StorageJsonKeys.IdToken);
+            }
             return item;
         }
 

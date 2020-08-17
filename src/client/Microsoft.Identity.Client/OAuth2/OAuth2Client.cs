@@ -34,9 +34,11 @@ namespace Microsoft.Identity.Client.OAuth2
         private readonly Dictionary<string, string> _queryParameters = new Dictionary<string, string>();
         private readonly IDictionary<string, string> _bodyParameters = new Dictionary<string, string>();
         private readonly IHttpManager _httpManager;
+        private ICoreLogger _logger;
 
         public OAuth2Client(ICoreLogger logger, IHttpManager httpManager, IMatsTelemetryManager telemetryManager)
         {
+            _logger = logger;
             _headers = new Dictionary<string, string>(MsalIdHelper.GetMsalIdParameters(logger));
             _httpManager = httpManager ?? throw new ArgumentNullException(nameof(httpManager));
         }
@@ -78,7 +80,7 @@ namespace Microsoft.Identity.Client.OAuth2
             return await ExecuteRequestAsync<MsalTokenResponse>(endPoint, HttpMethod.Post, requestContext, false, addCommonHeaders).ConfigureAwait(false);
         }
 
-        internal async Task<T> ExecuteRequestAsync<T>(Uri endPoint, HttpMethod method, RequestContext requestContext, bool expectErrorsOn200OK = false, bool addCommonHeaders = true)
+        internal async Task<T> ExecuteRequestAsync<T>(Uri endPoint, HttpMethod method, RequestContext requestContext, bool expectErrorsOn200OK = false, bool addCommonHeaders = true, bool useStringContent = false)
         {
             //Requests that are replayed by PKeyAuth do not need to have headers added because they already exist
             if (addCommonHeaders)
@@ -98,8 +100,22 @@ namespace Microsoft.Identity.Client.OAuth2
             {
                 if (method == HttpMethod.Post)
                 {
-                    response = await _httpManager.SendPostAsync(endpointUri, _headers, _bodyParameters, requestContext.Logger)
-                                                .ConfigureAwait(false);
+                    HttpContent body = null;
+                    if (_bodyParameters != null)
+                    {
+                        if (useStringContent)
+                        {
+                            string jsonString = JsonHelper.SerializeToJson(_bodyParameters);
+                            body = new StringContent(jsonString);
+                        }
+                        else
+                        {
+                            body = new FormUrlEncodedContent(_bodyParameters);
+                        }
+                    }
+
+                    response = await _httpManager.SendPostAsync(endpointUri, _headers, body, requestContext.Logger)
+                                             .ConfigureAwait(false);
                 }
                 else
                 {

@@ -37,6 +37,8 @@ namespace Microsoft.Identity.Client
         /// <param name="correlationId">The correlation id of the authentication request</param>
         /// <param name="tokenType">The token type, defaults to Bearer. Note: this property is experimental and may change in future versions of the library.</param>
         /// <param name="authenticationResultMetadata">Contains metadata related to the Authentication Result.</param>
+        /// <param name="refreshToken">The refresh token.</param>
+        /// <param name="expiresIn">The seconds that token expires in.</param>
         public AuthenticationResult(
             string accessToken,
             bool isExtendedLifeTimeToken,
@@ -49,7 +51,9 @@ namespace Microsoft.Identity.Client
             IEnumerable<string> scopes,
             Guid correlationId,
             AuthenticationResultMetadata authenticationResultMetadata,
-            string tokenType = "Bearer")
+            string tokenType = "Bearer",
+            string refreshToken = null,
+            int expiresIn = 0)
         {
             AccessToken = accessToken;
             IsExtendedLifeTimeToken = isExtendedLifeTimeToken;
@@ -63,6 +67,12 @@ namespace Microsoft.Identity.Client
             CorrelationId = correlationId;
             TokenType = tokenType;
             AuthenticationResultMetadata = authenticationResultMetadata;
+            RefreshToken = refreshToken;
+            ExpiresIn = expiresIn;
+            if (expiresIn == 0)
+            {
+                ExpiresIn = (long)(expiresOn - DateTimeOffset.Now).TotalSeconds;
+            }
         }
 
         internal AuthenticationResult(
@@ -70,7 +80,8 @@ namespace Microsoft.Identity.Client
             MsalIdTokenCacheItem msalIdTokenCacheItem,
             IAuthenticationScheme authenticationScheme,
             Guid correlationID,
-            TokenSource tokenSource)
+            TokenSource tokenSource,
+            string refreshToken = null)
         {
             _authenticationScheme = authenticationScheme ?? throw new ArgumentNullException(nameof(authenticationScheme));
             string homeAccountId =
@@ -84,8 +95,8 @@ namespace Microsoft.Identity.Client
                 string username = null;
                 if (msalIdTokenCacheItem != null)
                 {
-                    username = msalIdTokenCacheItem.IsAdfs ? 
-                        msalIdTokenCacheItem?.IdToken.Upn : 
+                    username = msalIdTokenCacheItem.IsAdfs ?
+                        msalIdTokenCacheItem?.IdToken.Upn :
                         msalIdTokenCacheItem?.IdToken?.PreferredUsername;
                 }
 
@@ -95,7 +106,7 @@ namespace Microsoft.Identity.Client
                     environment);
             }
 
-            if (msalAccessTokenCacheItem!= null)
+            if (msalAccessTokenCacheItem != null)
             {
                 AccessToken = authenticationScheme.FormatAccessToken(msalAccessTokenCacheItem);
                 ExpiresOn = msalAccessTokenCacheItem.ExpiresOn;
@@ -103,6 +114,7 @@ namespace Microsoft.Identity.Client
                 Scopes = msalAccessTokenCacheItem.ScopeSet;
                 IsExtendedLifeTimeToken = msalAccessTokenCacheItem.IsExtendedLifeTimeToken;
                 TokenType = msalAccessTokenCacheItem.TokenType;
+                ExpiresIn = msalAccessTokenCacheItem.ExpiresIn;
             }
 
             UniqueId = msalIdTokenCacheItem?.IdToken?.GetUniqueId();
@@ -110,6 +122,7 @@ namespace Microsoft.Identity.Client
             IdToken = msalIdTokenCacheItem?.Secret;
             CorrelationId = correlationID;
             AuthenticationResultMetadata = new AuthenticationResultMetadata(tokenSource);
+            RefreshToken = refreshToken;
         }
 
         /// <summary>
@@ -143,6 +156,11 @@ namespace Microsoft.Identity.Client
         public DateTimeOffset ExpiresOn { get; }
 
         /// <summary>
+        /// Gets the value ext_expiresIn received from the service.
+        /// </summary>
+        public long ExpiresIn { get; }
+
+        /// <summary>
         /// Gets the point in time in which the Access Token returned in the AccessToken property ceases to be valid in MSAL's extended LifeTime.
         /// This value is calculated based on current UTC time measured locally and the value ext_expiresIn received from the service.
         /// </summary>
@@ -166,6 +184,11 @@ namespace Microsoft.Identity.Client
         /// Gets the  Id Token if returned by the service or null if no Id Token is returned.
         /// </summary>
         public string IdToken { get; }
+
+        /// <summary>
+        /// Gets the  refresh Token if returned by the service or null if no Id Token is returned.
+        /// </summary>
+        public string RefreshToken { get; }
 
         /// <summary>
         /// Gets the granted scope values returned by the service.

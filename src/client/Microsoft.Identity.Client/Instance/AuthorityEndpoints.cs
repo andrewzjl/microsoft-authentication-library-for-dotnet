@@ -27,7 +27,7 @@ namespace Microsoft.Identity.Client.Instance
         public string LogString()
         {
             var builder = new StringBuilder(
-                   Environment.NewLine + "=== Authority endpoint ===");
+                   Environment.NewLine + "=== Authority endpoint ===" + Environment.NewLine);
             builder.AppendLine("AuthorizationEndpoint - " + AuthorizationEndpoint);
             builder.AppendLine("TokenEndpoint - " + TokenEndpoint);
             builder.AppendLine("SelfSignedJwtAudience - " + SelfSignedJwtAudience);
